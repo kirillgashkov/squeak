@@ -27,8 +27,8 @@ const (
 )
 
 type config struct {
-	mode   string
-	server *server.Config
+	Mode   string
+	Server *server.Config
 }
 
 func parseConfig(getenv func(string) string) (*config, error) {
@@ -49,7 +49,7 @@ func parseConfig(getenv func(string) string) (*config, error) {
 		return nil, err
 	}
 
-	return &config{server: serverCfg}, nil
+	return &config{Mode: mode, Server: serverCfg}, nil
 }
 
 func parseServerConfig(getenv func(string) string) (*server.Config, error) {
