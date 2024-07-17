@@ -2,9 +2,10 @@ package main
 
 import (
 	"errors"
-	"github.com/kirillgashkov/squeak/internal/server"
 	"strconv"
 	"time"
+
+	"github.com/kirillgashkov/squeak/internal/server"
 )
 
 const (

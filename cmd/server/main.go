@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/kirillgashkov/squeak/internal/server"
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/kirillgashkov/squeak/internal/server"
 )
 
 func main() {
