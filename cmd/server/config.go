@@ -8,22 +8,42 @@ import (
 )
 
 const (
+	modeKey                    = "SQUEAK_MODE"
 	serverHostKey              = "SQUEAK_SERVER_HOST"
 	serverPortKey              = "SQUEAK_SERVER_PORT"
 	serverReadHeaderTimeoutKey = "SQUEAK_SERVER_READ_HEADER_TIMEOUT"
 )
 
 const (
+	defaultMode                    = modeDevelopment
 	defaultServerHost              = "127.0.0.1"
 	defaultServerPort              = 8000
 	defaultServerReadHeaderTimeout = 1 * time.Second
 )
 
+const (
+	modeDevelopment = "development"
+	modeProduction  = "production"
+)
+
 type config struct {
+	mode   string
 	server *server.Config
 }
 
 func parseConfig(getenv func(string) string) (*config, error) {
+	var err error
+
+	mode := defaultMode
+	if getenv(modeKey) != "" {
+		mode = getenv(modeKey)
+		switch mode {
+		case modeDevelopment, modeProduction:
+		default:
+			return nil, errors.New("invalid mode")
+		}
+	}
+
 	serverCfg, err := parseServerConfig(getenv)
 	if err != nil {
 		return nil, err
