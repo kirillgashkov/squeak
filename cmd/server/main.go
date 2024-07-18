@@ -29,7 +29,7 @@ func run(stdout io.Writer, getenv func(string) string) error {
 		return err
 	}
 
-	srv := server.New(cfg.Server)
+	srv := server.New(log, cfg.Server)
 
 	lst, err := server.NewListener(cfg.Server)
 	if err != nil {

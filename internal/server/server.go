@@ -2,19 +2,24 @@ package server
 
 import (
 	"crypto/tls"
+	"log/slog"
 	"net"
 	"net/http"
 	"strconv"
 )
 
-func New(cfg *Config) *http.Server {
+func New(log *slog.Logger, cfg *Config) *http.Server {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /health", handleGetHealth)
 
+	subLogger := log.With("component", "server")
+	subLogLogger := slog.NewLogLogger(subLogger.Handler(), slog.LevelError)
+
 	return &http.Server{
 		Handler:           mux,
 		ReadHeaderTimeout: cfg.ReadHeaderTimeout,
+		ErrorLog:          subLogLogger,
 	}
 }
 
