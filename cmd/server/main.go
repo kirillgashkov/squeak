@@ -24,7 +24,7 @@ func run(stdout io.Writer, getenv func(string) string) error {
 		return err
 	}
 
-	log, err := newLogger(cfg.Mode, stdout)
+	log, err := newLogger(stdout, cfg.Mode)
 	if err != nil {
 		return err
 	}
