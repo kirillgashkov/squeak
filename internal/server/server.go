@@ -1,6 +1,7 @@
 package server
 
 import (
+	"crypto/tls"
 	"net"
 	"net/http"
 	"strconv"
@@ -12,10 +13,27 @@ func New(cfg *Config) *http.Server {
 	mux.HandleFunc("GET /health", handleGetHealth)
 
 	return &http.Server{
-		Addr:              net.JoinHostPort(cfg.Host, strconv.Itoa(cfg.Port)),
 		Handler:           mux,
 		ReadHeaderTimeout: cfg.ReadHeaderTimeout,
 	}
+}
+
+func NewListener(cfg *Config) (net.Listener, error) {
+	var err error
+	addr := net.JoinHostPort(cfg.Host, strconv.Itoa(cfg.Port))
+
+	if !cfg.TLS.Enabled {
+		return net.Listen("tcp", addr)
+	}
+
+	tlsCfg := &tls.Config{MinVersion: tls.VersionTLS13}
+	tlsCfg.Certificates = make([]tls.Certificate, 1)
+	tlsCfg.Certificates[0], err = tls.LoadX509KeyPair(cfg.TLS.CertFile, cfg.TLS.KeyFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return tls.Listen("tcp", addr, tlsCfg)
 }
 
 func handleGetHealth(w http.ResponseWriter, _ *http.Request) {
