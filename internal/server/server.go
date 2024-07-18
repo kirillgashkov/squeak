@@ -32,7 +32,6 @@ func NewListener(cfg *Config) (net.Listener, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return tls.Listen("tcp", addr, tlsCfg)
 }
 
